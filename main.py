@@ -1,8 +1,10 @@
 import requests
+import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 
-def get_links(launch_id):
+"""def get_links(launch_id):
     url = f'https://api.spacexdata.com/v5/launches/{launch_id}'
     response = requests.get(url)
     response.raise_for_status()
@@ -14,8 +16,8 @@ def get_links(launch_id):
     else:
         print("Фотографии отсутствуют")
     return picture_urls
+"""
 
-launch_id = "5eb87d42ffd86e000604b384"
 
 
 def download_image():
@@ -39,4 +41,33 @@ def download_image():
     with open(picture_path, 'wb') as file:
         file.write(response.content)
 
-get_links(launch_id)
+
+def fetch_spacex_last_launch(launch_id):
+    url = f'https://api.spacexdata.com/v5/launches/{launch_id}'
+    response = requests.get(url)
+    response.raise_for_status()
+
+    folder_path = Path(r"D:\Py\SpacePhotos\images")
+    folder_path.mkdir(parents=True, exist_ok=True)
+
+    picture_urls = response.json().get('links', {}).get('flickr', {}).get('original', [])
+    if not picture_urls:
+        print("Фотографии отсутствуют.")
+        return
+
+    for index, picture_url in enumerate(picture_urls):
+        picture_name = f'spacex_{index}.jpg'
+        picture_path = folder_path / picture_name
+
+        picture_response = requests.get(picture_url)
+        picture_response.raise_for_status()
+
+        with open(picture_path, 'wb') as file:
+            file.write(picture_response.content)
+
+
+
+
+
+launch_id = "5eb87d42ffd86e000604b384"
+fetch_spacex_last_launch(launch_id)
