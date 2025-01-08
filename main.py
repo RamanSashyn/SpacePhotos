@@ -1,7 +1,7 @@
 import requests
 import os
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlsplit, unquote
 
 
 """def get_links(launch_id):
@@ -65,9 +65,21 @@ def fetch_spacex_last_launch(launch_id):
         with open(picture_path, 'wb') as file:
             file.write(picture_response.content)
 
-
-
-
-
 launch_id = "5eb87d42ffd86e000604b384"
-fetch_spacex_last_launch(launch_id)
+
+
+def get_file_extension():
+    url = "https://example.com/txt/hello%20world.txt?v=9#python"
+
+    split_url = urlsplit(url)
+
+    file_path = split_url.path
+
+    file_name, file_extension = os.path.splitext(file_path)
+
+    print(file_extension)
+
+get_file_extension()
+
+
+
