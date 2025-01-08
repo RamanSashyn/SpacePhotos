@@ -1,7 +1,8 @@
 import requests
 import os
 from pathlib import Path
-from urllib.parse import urlsplit, unquote
+from urllib.parse import urlsplit, urlencode
+from dotenv import load_dotenv
 
 
 """def get_links(launch_id):
@@ -79,7 +80,45 @@ def get_file_extension():
 
     print(file_extension)
 
-get_file_extension()
+
+def download_nasa_picture():
+    load_dotenv()
+    api_key = os.getenv('NASA_API_KEY')
+
+    if not api_key:
+        print('Ошибка: API ключ не найден.')
+        return
+
+    params = {
+        'api_key': api_key,
+        'count': 30
+    }
+    base_url = 'https://api.nasa.gov/planetary/apod'
+    url = f'{base_url}?{urlencode(params)}'
+    response = requests.get(url)
+    response.raise_for_status()
+
+    folder_path = Path(r"D:\Py\SpacePhotos\images")
+    folder_path.mkdir(parents=True, exist_ok=True)
+
+    nasa_data = response.json()
+    if not nasa_data:
+        print("Фотографии отсутствуют.")
+        return
+
+    for index, nasa_item in enumerate(nasa_data):
+        nasa_url = nasa_item.get('url')
+        picture_name = f'nasa_apod_{index}.jpg'
+        picture_path = folder_path / picture_name
+
+        picture_response = requests.get(nasa_url)
+        picture_response.raise_for_status()
+
+        with open(picture_path, 'wb') as file:
+            file.write(picture_response.content)
+
+
+download_nasa_picture()
 
 
 
