@@ -118,7 +118,34 @@ def download_nasa_picture():
             file.write(picture_response.content)
 
 
-download_nasa_picture()
+def get_land_picture():
+    load_dotenv()
+    api_key = os.getenv('NASA_API_KEY')
 
+    params = {'api_key': api_key}
+    epic_api_url = "https://api.nasa.gov/EPIC/api/natural/images"
 
+    response = requests.get(epic_api_url, params=params)
+    response.raise_for_status()
+
+    epic_data = response.json()
+    if not epic_data:
+        print('Фотографии отсутствуют.')
+        return
+
+    first_photo = epic_data[0]
+    image_name = first_photo.get('image')
+    date = first_photo.get('date')
+
+    date = date.split(' ')[0]
+    year, month, day = date.split('-')
+    photo_url = (
+        f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/"
+        f"{image_name}.png?api_key={api_key}"
+    )
+
+    print(photo_url)
+    return photo_url
+
+get_land_picture()
 
