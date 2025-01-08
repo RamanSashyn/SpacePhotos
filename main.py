@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from urllib.parse import urlsplit, urlencode
 from dotenv import load_dotenv
+from datetime import datetime
 
 
 """def get_links(launch_id):
@@ -133,19 +134,31 @@ def get_land_picture():
         print('Фотографии отсутствуют.')
         return
 
-    first_photo = epic_data[0]
-    image_name = first_photo.get('image')
-    date = first_photo.get('date')
+    folder_path = Path(r"D:\Py\SpacePhotos\images")
+    folder_path.mkdir(parents=True, exist_ok=True)
 
-    date = date.split(' ')[0]
-    year, month, day = date.split('-')
-    photo_url = (
-        f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/"
-        f"{image_name}.png?api_key={api_key}"
-    )
+    for index, epic_photo in enumerate(epic_data[:5]):
+        image_name = epic_photo.get('image')
+        date = epic_photo.get('date')
 
-    print(photo_url)
-    return photo_url
+        try:
+            date_obj = datetime.fromisoformat(date)
+            formatted_date = date_obj.strftime("%Y/%m/%d")
+        except ValueError as e:
+            print(f'Ошибка в преобразовании {date}: {e}')
+            continue
+
+        year, month, day = formatted_date.split('/')
+        photo_url = (
+            f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/"
+            f"{image_name}.png?api_key={api_key}"
+        )
+
+        picture_path = folder_path / f'epic_photo_{index}.png'
+        picture_response = requests.get(photo_url)
+        picture_response.raise_for_status()
+        with open(picture_path, 'wb') as file:
+            file.write(picture_response.content)
 
 get_land_picture()
 
