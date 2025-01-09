@@ -11,7 +11,7 @@ def get_picture_from_directory(directory_path):
     pictures = []
     for root, dirs, files in os.walk(directory_path):
         for file in files:
-            if os.path.splitext(file)[1].lower() in picture_extensions:
+            if os.path.splitext(file)[1].lower() in [f".{ext}" for ext in picture_extensions]:
                 pictures.append(os.path.join(root, file))
     return pictures
 
@@ -22,21 +22,21 @@ def send_photo_to_telegram(bot_token, chat_id, photo_path):
         bot.send_photo(chat_id=chat_id, photo=photo)
 
 
-def publish_photos(bot_token, chat_id, photo_directory, interval):
+def publish_photos(bot_token, chat_id, photo_directory, interval_hours):
     photos = get_picture_from_directory(photo_directory)
+    if not photos:
+        raise ValueError("Не найдено изображений в указанной директории.")
     while True:
         random.shuffle(photos)
         for photo in photos:
             send_photo_to_telegram(bot_token, chat_id, photo)
-            time.sleep(interval * 3600)
+            time.sleep(interval_hours * 3600)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Публикует фотографии в Telegram-канал.")
     parser.add_argument("photo_directory", type=str, help="Путь к директории с фотографиями")
-    parser.add_argument("--interval", type=int, help="Интервал между публикациями в часах")
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 def main():
@@ -45,12 +45,15 @@ def main():
     chat_id = os.getenv('TELEGRAM_CHAT_ID')
     interval = os.getenv('TELEGRAM_INTERVAL')
     if not bot_token or not chat_id:
-        print("Ошибка: не найдены переменные окружения TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID.")
-        return
-    print(f"Токен: {bot_token}, Chat ID: {chat_id}, Интервал: {interval} часов.")
+        raise EnvironmentError("Не найдены переменные окружения TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID.")
+
+    try:
+        interval = float(interval)
+    except ValueError:
+        raise ValueError("Переменная окружения TELEGRAM_INTERVAL должна быть числом (в часах).")
+
     args = parse_args()
-    print(f"Путь к директории с фотографиями: {args.photo_directory}")
-    publish_photos(args.photo_directory, args.interval, bot_token, chat_id)
+    publish_photos(bot_token, chat_id, args.photo_directory, interval)
 
 
 if __name__ == '__main__':
