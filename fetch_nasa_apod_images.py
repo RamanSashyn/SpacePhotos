@@ -21,7 +21,7 @@ def main():
     response = requests.get(url)
     response.raise_for_status()
 
-    folder_path = Path("./images/nasa_apod")
+    folder_path = Path("./images")
     nasa_data = response.json()
     if not nasa_data:
         print("Фотографии отсутствуют.")

@@ -38,7 +38,7 @@ def main():
     else:
         launch_id = args.launch_id
 
-    folder_path = Path("./images/spacex")
+    folder_path = Path("./images")
     fetch_spacex_images(launch_id, folder_path)
 
 if __name__ == "__main__":

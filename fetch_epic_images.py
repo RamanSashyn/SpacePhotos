@@ -24,7 +24,7 @@ def main():
         print('Фотографии отсутствуют.')
         return
 
-    folder_path = Path('./images/nasa_epic')
+    folder_path = Path('./images')
     for index, epic_photo in enumerate(epic_data[:5]):
         image_name = epic_photo.get('image')
         date = epic_photo.get('date')
