@@ -6,22 +6,6 @@ from dotenv import load_dotenv
 from datetime import datetime
 
 
-"""def get_links(launch_id):
-    url = f'https://api.spacexdata.com/v5/launches/{launch_id}'
-    response = requests.get(url)
-    response.raise_for_status()
-
-    picture_urls = response.json().get('links', {}).get('flickr', {}).get('original', [])
-
-    if picture_urls:
-        print(picture_urls)
-    else:
-        print("Фотографии отсутствуют")
-    return picture_urls
-"""
-
-
-
 def download_image():
     picture_url = input('Введите url картинки: ')
     folder_path_input = input("Введите путь к папке для сохранения (например, D:/Images): ")
