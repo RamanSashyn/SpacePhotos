@@ -22,12 +22,12 @@ def main():
     response.raise_for_status()
 
     folder_path = Path("./images")
-    nasa_data = response.json()
-    if not nasa_data:
+    apod_images_data = response.json()
+    if not apod_images_data:
         print("Фотографии отсутствуют.")
         return
 
-    for index, nasa_item in enumerate(nasa_data):
+    for index, nasa_item in enumerate(apod_images_data):
         nasa_url = nasa_item['url']
         if not nasa_url:
             continue
