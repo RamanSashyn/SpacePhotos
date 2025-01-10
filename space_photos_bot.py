@@ -1,25 +1,10 @@
-import telegram
 import time
 import argparse
 import random
 import os
 from dotenv import load_dotenv
-
-
-def get_picture_from_directory(directory_path):
-    picture_extensions = ['jpg', 'jpeg', 'png', 'gif']
-    pictures = []
-    for root, dirs, files in os.walk(directory_path):
-        for file in files:
-            if os.path.splitext(file)[1].lower() in [f".{ext}" for ext in picture_extensions]:
-                pictures.append(os.path.join(root, file))
-    return pictures
-
-
-def send_photo_to_telegram(bot_token, chat_id, photo_path):
-    bot = telegram.Bot(token=bot_token)
-    with open(photo_path, 'rb') as photo:
-        bot.send_photo(chat_id=chat_id, photo=photo)
+from get_picture_from_directory import get_picture_from_directory
+from send_photo_to_telegram import send_photo_to_telegram
 
 
 def publish_photos(bot_token, chat_id, photo_directory, interval_hours):
