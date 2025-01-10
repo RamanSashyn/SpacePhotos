@@ -22,8 +22,17 @@ def publish_photo(bot_token, chat_id, photo_directory, specific_photo=None):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Публикует фотографию в Telegram-канал.")
-    parser.add_argument("photo_directory", type=str, help="Путь к директории с фотографиями.")
-    parser.add_argument("--photo", type=str, help="Имя файла фотографии для публикации.")
+    parser.add_argument(
+        "photo_directory",
+        type=str,
+        help="Путь к директории с фотографиями."
+    )
+    parser.add_argument(
+        "--photo",
+        type=str,
+        default=None,
+        help="Имя файла фотографии для публикации (по умолчанию выбрана случайная)."
+    )
     return parser.parse_args()
 
 

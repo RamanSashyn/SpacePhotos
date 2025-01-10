@@ -29,14 +29,17 @@ def fetch_spacex_images(launch_id, folder_path):
 
 def main():
     parser = argparse.ArgumentParser(description="Скачивание фото SpaceX")
-    parser.add_argument("--launch_id", type=str, help="ID запуска SpaceX (если не указан, используется последний)")
+    parser.add_argument(
+        "--launch_id",
+        type=str,
+        default=None,
+        help="ID запуска SpaceX (по умолчанию используется последний запуск)"
+    )
     args = parser.parse_args()
 
+    launch_id = args.launch_id or get_latest_launch_id()
     if args.launch_id is None:
-        launch_id = get_latest_launch_id()
         print(f"Используем ID последнего запуска: {launch_id}")
-    else:
-        launch_id = args.launch_id
 
     folder_path = Path("./images")
     fetch_spacex_images(launch_id, folder_path)
