@@ -7,12 +7,16 @@ from get_picture_from_directory import get_picture_from_directory
 from send_photo_to_telegram import send_photo_to_telegram
 
 
-def publish_photos(bot_token, chat_id, photo_directory, interval_hours):
+def get_shuffled_photos(photo_directory):
     photos = get_picture_from_directory(photo_directory)
     if not photos:
         raise ValueError("Не найдено изображений в указанной директории.")
+    random.shuffle(photos)
+    return photos
+
+
+def send_photos_in_loop(bot_token, chat_id, photos, interval_hours):
     while True:
-        random.shuffle(photos)
         for photo in photos:
             send_photo_to_telegram(bot_token, chat_id, photo)
             time.sleep(interval_hours * 3600)
@@ -42,7 +46,8 @@ def main():
         raise ValueError("Переменная окружения TELEGRAM_INTERVAL должна быть числом (в часах).")
 
     args = parse_args()
-    publish_photos(bot_token, chat_id, args.photo_directory, interval)
+    photos = get_shuffled_photos(args.photo_directory)
+    send_photos_in_loop(bot_token, chat_id, photos, interval)
 
 
 if __name__ == '__main__':

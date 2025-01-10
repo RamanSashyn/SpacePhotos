@@ -6,7 +6,7 @@ from get_picture_from_directory import get_picture_from_directory
 from send_photo_to_telegram import send_photo_to_telegram
 
 
-def publish_photo(bot_token, chat_id, photo_directory, specific_photo=None):
+def get_photo_path(bot_token, chat_id, photo_directory, specific_photo=None):
     if specific_photo:
         photo_path = os.path.join(photo_directory, specific_photo)
         if not os.path.isfile(photo_path):
@@ -16,7 +16,11 @@ def publish_photo(bot_token, chat_id, photo_directory, specific_photo=None):
         if not photos:
             raise ValueError("В указанной директории нет подходящих изображений.")
         photo_path = random.choice(photos)
+    return photo_path
 
+
+def publish_photo(bot_token, chat_id, photo_directory, specific_photo=None):
+    photo_path = get_photo_path(photo_directory, specific_photo)
     send_photo_to_telegram(bot_token, chat_id, photo_path)
 
 
