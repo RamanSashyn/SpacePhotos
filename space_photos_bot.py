@@ -23,34 +23,36 @@ def send_photos_in_loop(bot_token, chat_id, photos, interval_hours):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Публикует фотографии в Telegram-канал.")
+    parser = argparse.ArgumentParser(
+        description="Публикует фотографии в Telegram-канал."
+    )
     parser.add_argument(
-        "photo_directory",
-        type=str,
-        help="Путь к директории с фотографиями."
+        "photo_directory", type=str, help="Путь к директории с фотографиями."
     )
     return parser.parse_args()
 
 
 def main():
     load_dotenv()
-    bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
-    chat_id = os.getenv('TELEGRAM_CHAT_ID')
-    interval = os.getenv('TELEGRAM_INTERVAL')
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    interval = os.getenv("TELEGRAM_INTERVAL")
     if not bot_token or not chat_id:
-        raise EnvironmentError("Не найдены переменные окружения TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID.")
+        raise EnvironmentError(
+            "Не найдены переменные окружения TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID."
+        )
 
     try:
         interval = float(interval)
     except ValueError:
-        raise ValueError("Переменная окружения TELEGRAM_INTERVAL должна быть числом (в часах).")
+        raise ValueError(
+            "Переменная окружения TELEGRAM_INTERVAL должна быть числом (в часах)."
+        )
 
     args = parse_args()
     photos = get_shuffled_photos(args.photo_directory)
     send_photos_in_loop(bot_token, chat_id, photos, interval)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
-

@@ -5,19 +5,21 @@ import argparse
 
 
 def get_latest_launch_id():
-    url = 'https://api.spacexdata.com/v5/launches/latest'
+    url = "https://api.spacexdata.com/v5/launches/latest"
     response = requests.get(url)
     response.raise_for_status()
     launch_data = response.json()
-    return launch_data.get('id')
+    return launch_data.get("id")
 
 
 def fetch_spacex_images(launch_id, folder_path):
-    url = f'https://api.spacexdata.com/v5/launches/{launch_id}'
+    url = f"https://api.spacexdata.com/v5/launches/{launch_id}"
     response = requests.get(url)
     response.raise_for_status()
 
-    picture_urls = response.json().get('links', {}).get('flickr', {}).get('original', [])
+    picture_urls = (
+        response.json().get("links", {}).get("flickr", {}).get("original", [])
+    )
     if not picture_urls:
         print("Фотографии отсутствуют.")
         return
@@ -33,7 +35,7 @@ def main():
         "--launch_id",
         type=str,
         default=None,
-        help="ID запуска SpaceX (по умолчанию используется последний запуск)"
+        help="ID запуска SpaceX (по умолчанию используется последний запуск)",
     )
     args = parser.parse_args()
 
@@ -43,6 +45,7 @@ def main():
 
     folder_path = Path("./images")
     fetch_spacex_images(launch_id, folder_path)
+
 
 if __name__ == "__main__":
     main()

@@ -9,5 +9,5 @@ def download_image(picture_url, folder_path, picture_name):
     folder_path.mkdir(parents=True, exist_ok=True)
     picture_path = folder_path / picture_name
 
-    with open(picture_path, 'wb') as file:
+    with open(picture_path, "wb") as file:
         file.write(response.content)

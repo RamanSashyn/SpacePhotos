@@ -11,12 +11,12 @@ def main():
     load_dotenv()
     api_key = os.getenv("NASA_API_KEY")
     if not api_key:
-        print('Ошибка: API ключ не найден.')
+        print("Ошибка: API ключ не найден.")
         return
 
-    params = {'api_key': api_key, 'count': 30}
-    base_url = 'https://api.nasa.gov/planetary/apod'
-    url = f'{base_url}?{urlencode(params)}'
+    params = {"api_key": api_key, "count": 30}
+    base_url = "https://api.nasa.gov/planetary/apod"
+    url = f"{base_url}?{urlencode(params)}"
 
     response = requests.get(url)
     response.raise_for_status()
@@ -28,7 +28,7 @@ def main():
         return
 
     for index, nasa_item in enumerate(apod_images_data):
-        nasa_url = nasa_item['url']
+        nasa_url = nasa_item["url"]
         if not nasa_url:
             continue
 
@@ -36,9 +36,9 @@ def main():
         if not file_extension:
             continue
 
-        picture_name = f'nasa_apod_{index}{file_extension}'
+        picture_name = f"nasa_apod_{index}{file_extension}"
         download_image(nasa_url, folder_path, picture_name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
