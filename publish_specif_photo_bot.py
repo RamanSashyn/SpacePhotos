@@ -8,19 +8,27 @@ from send_photo_to_telegram import send_photo_to_telegram
 
 def get_photo_path(photo_directory, specific_photo=None):
     if specific_photo:
-        photo_path = os.path.join(photo_directory, specific_photo)
-        if not os.path.isfile(photo_path):
-            raise FileNotFoundError(
-                f"Указанный файл '{specific_photo}' не найден в директории '{photo_directory}'."
-            )
+        return get_specific_photo_path(photo_directory, specific_photo)
     else:
-        photos = get_picture_from_directory(photo_directory)
-        if not photos:
-            raise ValueError(
-                "В указанной директории нет подходящих изображений."
-            )
-        photo_path = random.choice(photos)
+        return get_random_photo_path(photo_directory)
+
+
+def get_specific_photo_path(photo_directory, specific_photo):
+    photo_path = os.path.join(photo_directory, specific_photo)
+    if not os.path.isfile(photo_path):
+        raise FileNotFoundError(
+            f"Указанный файл '{specific_photo}' не найден в директории '{photo_directory}'."
+        )
     return photo_path
+
+
+def get_random_photo_path(photo_directory):
+    photos = get_picture_from_directory(photo_directory)
+    if not photos:
+        raise ValueError(
+            "В указанной директории нет подходящих изображений."
+        )
+    return random.choice(photos)
 
 
 def parse_args():
