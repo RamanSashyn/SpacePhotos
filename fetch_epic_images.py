@@ -21,13 +21,13 @@ def main():
     response = requests.get(epic_api_url, params=params)
     response.raise_for_status()
 
-    epic_images_data = response.json()
-    if not epic_images_data:
+    epic_image_records = response.json()
+    if not epic_image_records:
         print("Фотографии отсутствуют.")
         return
 
     folder_path = Path("./images")
-    for index, epic_photo in enumerate(epic_images_data[:5]):
+    for index, epic_photo in enumerate(epic_image_records[:5]):
         image_name = epic_photo.get("image")
         date = epic_photo.get("date")
 
