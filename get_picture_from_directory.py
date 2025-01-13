@@ -1,7 +1,7 @@
 import os
 
 
-def get_picture_from_directory(directory_path):
+def get_pictures_from_directory(directory_path):
     picture_extensions = ["jpg", "jpeg", "png", "gif"]
     pictures = []
     for root, dirs, files in os.walk(directory_path):
