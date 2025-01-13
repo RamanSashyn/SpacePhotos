@@ -7,14 +7,6 @@ from get_picture_from_directory import get_picture_from_directory
 from send_photo_to_telegram import send_photo_to_telegram
 
 
-def get_shuffled_photos(photo_directory):
-    photos = get_picture_from_directory(photo_directory)
-    if not photos:
-        raise ValueError("Не найдено изображений в указанной директории.")
-    random.shuffle(photos)
-    return photos
-
-
 def send_photos_in_loop(bot_token, chat_id, photos, interval_hours):
     while True:
         for photo in photos:
@@ -50,7 +42,12 @@ def main():
         )
 
     args = parse_args()
-    photos = get_shuffled_photos(args.photo_directory)
+
+    photos = get_picture_from_directory(args.photo_directory)
+    if not photos:
+        raise ValueError("Не найдено изображений в указанной директории.")
+    random.shuffle(photos)
+
     send_photos_in_loop(bot_token, chat_id, photos, interval)
 
 
