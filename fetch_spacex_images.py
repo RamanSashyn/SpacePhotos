@@ -4,14 +4,6 @@ from download_image import download_image
 import argparse
 
 
-def get_latest_launch_id():
-    url = "https://api.spacexdata.com/v5/launches/latest"
-    response = requests.get(url)
-    response.raise_for_status()
-    launch_data = response.json()
-    return launch_data.get("id")
-
-
 def fetch_spacex_images(launch_id, folder_path):
     url = f"https://api.spacexdata.com/v5/launches/{launch_id}"
     response = requests.get(url)
@@ -34,17 +26,19 @@ def main():
     parser.add_argument(
         "--launch_id",
         type=str,
-        default=None,
+        default='latest',
         help="ID запуска SpaceX (по умолчанию используется последний запуск)",
     )
     args = parser.parse_args()
 
-    launch_id = args.launch_id or get_latest_launch_id()
-    if args.launch_id is None:
-        print(f"Используем ID последнего запуска: {launch_id}")
+    if args.launch_id == 'latest':
+        url = "https://api.spacexdata.com/v5/launches/latest"
+        response = requests.get(url)
+        response.raise_for_status()
+        args.launch_id = response.json().get("id")
 
     folder_path = Path("./images")
-    fetch_spacex_images(launch_id, folder_path)
+    fetch_spacex_images(args.launch_id, folder_path)
 
 
 if __name__ == "__main__":
