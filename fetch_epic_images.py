@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 from download_image import download_image
-from urllib.parse import urlencode
 
 
 def main():
@@ -45,13 +44,8 @@ def main():
             f"{image_name}.png"
         )
 
-        query_params = {"api_key": api_key}
-        encoded_params = urlencode(query_params)
-
-        photo_url_with_api_key = f"{photo_url}?{encoded_params}"
-
         picture_name = f"epic_photo_{index}.png"
-        download_image(photo_url_with_api_key, folder_path, picture_name)
+        download_image(photo_url, folder_path, picture_name, params=params)
 
 
 if __name__ == "__main__":
