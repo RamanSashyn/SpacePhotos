@@ -4,13 +4,9 @@ from download_image import download_image
 import argparse
 
 
-def fetch_spacex_images(launch_id, folder_path):
-    url = f"https://api.spacexdata.com/v5/launches/{launch_id}"
-    response = requests.get(url)
-    response.raise_for_status()
-
+def fetch_spacex_images(launch_info, folder_path):
     picture_urls = (
-        response.json().get("links", {}).get("flickr", {}).get("original", [])
+        launch_info.get("links", {}).get("flickr", {}).get("original", [])
     )
     if not picture_urls:
         print("Фотографии отсутствуют.")
@@ -31,14 +27,13 @@ def main():
     )
     args = parser.parse_args()
 
-    if args.launch_id == 'latest':
-        url = "https://api.spacexdata.com/v5/launches/latest"
-        response = requests.get(url)
-        response.raise_for_status()
-        args.launch_id = response.json().get("id")
+    url = f"https://api.spacexdata.com/v5/launches/{args.launch_id}"
+    response = requests.get(url)
+    response.raise_for_status()
+    launch_info = response.json()
 
     folder_path = Path("./images")
-    fetch_spacex_images(args.launch_id, folder_path)
+    fetch_spacex_images(launch_info, folder_path)
 
 
 if __name__ == "__main__":
