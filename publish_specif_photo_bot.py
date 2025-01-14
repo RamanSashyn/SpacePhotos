@@ -2,15 +2,8 @@ import argparse
 import random
 import os
 from dotenv import load_dotenv
-from get_picture_from_directory import get_picture_from_directory
+from get_picture_from_directory import get_pictures_from_directory
 from send_photo_to_telegram import send_photo_to_telegram
-
-
-def get_photo_path(photo_directory, specific_photo=None):
-    if specific_photo:
-        return get_specific_photo_path(photo_directory, specific_photo)
-    else:
-        return get_random_photo_path(photo_directory)
 
 
 def get_specific_photo_path(photo_directory, specific_photo):
@@ -23,7 +16,7 @@ def get_specific_photo_path(photo_directory, specific_photo):
 
 
 def get_random_photo_path(photo_directory):
-    photos = get_picture_from_directory(photo_directory)
+    photos = get_pictures_from_directory(photo_directory)
     if not photos:
         raise ValueError(
             "В указанной директории нет подходящих изображений."
@@ -58,7 +51,12 @@ def main():
         )
 
     args = parse_args()
-    photo_path = get_photo_path(args.photo_directory, args.photo)
+
+    if args.photo:
+        photo_path = get_specific_photo_path(args.photo_directory, args.photo)
+    else:
+        photo_path = get_random_photo_path(args.photo_directory)
+
     send_photo_to_telegram(bot_token, chat_id, photo_path)
 
 
