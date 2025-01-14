@@ -3,7 +3,7 @@ import argparse
 import random
 import os
 from dotenv import load_dotenv
-from get_picture_from_directory import get_picture_from_directory
+from get_picture_from_directory import get_pictures_from_directory
 from send_photo_to_telegram import send_photo_to_telegram
 
 
@@ -43,7 +43,7 @@ def main():
 
     args = parse_args()
 
-    photos = get_picture_from_directory(args.photo_directory)
+    photos = get_pictures_from_directory(args.photo_directory)
     if not photos:
         raise ValueError("Не найдено изображений в указанной директории.")
     random.shuffle(photos)
